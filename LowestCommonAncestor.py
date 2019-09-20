@@ -1,19 +1,6 @@
 from treelib import Tree, Node
 
 
-def make_tree():
-    tree = Tree()
-    tree.create_node("A", "a")
-    tree.create_node("b", "b", parent="a")
-    tree.create_node("c", "c", parent="a")
-    tree.create_node("d", "d", parent="a")
-    tree.create_node("e", "e", parent="d")
-    tree.create_node("f", "f", parent="b")
-    tree.create_node("g", "g", parent="f")
-    return tree
-
-
-
 def lca(tree, list_of_descendants):
     list_of_family_trees = []
     shortest_family_tree = None
@@ -31,10 +18,12 @@ def lca(tree, list_of_descendants):
 
         # check if the current possible lca is in all other family trees
         for family_tree in list_of_family_trees:
+            contains_lca = False
             for ancestor in family_tree:
                 if ancestor is lca:
                     contains_lca = True
                     break
+            # if it gets here and the lca hasnt been founf then this lca isnt in this tree
 
             if contains_lca is False:
                 break
@@ -49,6 +38,3 @@ def find_heritage(tree, descendant):  # finds the chain from a given descendant 
         descendant = tree.parent(descendant).identifier
         chain.append(descendant)
     return chain
-
-
-# pick nodes you want to find the LCA of
