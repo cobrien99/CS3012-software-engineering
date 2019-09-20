@@ -1,38 +1,54 @@
-# where I will write the code that will attempt to solve the
-# lowest common ancestor problem
-
-# load in new tree from file
-# the root n is stored in tree[1]
-# if a node occupies tree[k] then its left child is in tree[k*2]
-# and its right child is in tree[k*2+1]
-
-# familyTree = open("FamilyTrees/small.txt", "r")
-# print(familyTree)
-# doesnt work for some reason
+from treelib import Tree, Node
 
 
-class FamilyTree:
-    def __init__(self, family_tree_string):
-        self.string = family_tree_string
-
-    def find_parent(self, node):
-        node_pos = self.string.find(node)
-        parent_pos = (node_pos+1)//2
-        return parent_pos
-
-    def find_node_at_pos(self, pos):
-        return self.string[pos-1]
-
-
-def lca(family_tree, list_of_descendants):
-    node = ""
-
-    return node
+def make_tree():
+    tree = Tree()
+    tree.create_node("A", "a")
+    tree.create_node("b", "b", parent="a")
+    tree.create_node("c", "c", parent="a")
+    tree.create_node("d", "d", parent="a")
+    tree.create_node("e", "e", parent="d")
+    tree.create_node("f", "f", parent="b")
+    tree.create_node("g", "g", parent="f")
+    return tree
 
 
-familyTree = FamilyTree("abcd-ef-h")
-print(familyTree.find_parent("b"))
-print(familyTree.find_parent("h"))
-print(familyTree.find_node_at_pos(4))
+
+def lca(tree, list_of_descendants):
+    list_of_family_trees = []
+    shortest_family_tree = None
+    for descendant in list_of_descendants:  # descendant is a string id for that node
+        family_tree = find_heritage(tree, descendant)
+        # find the shortest family_tree
+        if (shortest_family_tree is None) or (len(family_tree) < len(shortest_family_tree)):
+            shortest_family_tree = family_tree
+        list_of_family_trees.append(family_tree)
+
+    # begin the search for lca at the base of the shortest family_tree
+
+    for lca in shortest_family_tree:
+        contains_lca = False
+
+        # check if the current possible lca is in all other family trees
+        for family_tree in list_of_family_trees:
+            for ancestor in family_tree:
+                if ancestor is lca:
+                    contains_lca = True
+                    break
+
+            if contains_lca is False:
+                break
+
+        if contains_lca is True:  # if all trees contain this same lca then we are done
+            return lca
+
+
+def find_heritage(tree, descendant):  # finds the chain from a given descendant to root
+    chain = [descendant]  # adds this descendants id to the chain
+    while tree.parent(descendant) is not None:
+        descendant = tree.parent(descendant).identifier
+        chain.append(descendant)
+    return chain
+
 
 # pick nodes you want to find the LCA of
