@@ -1,6 +1,3 @@
-from treelib import Tree, Node
-
-
 def lca(tree, list_of_descendants):
     list_of_family_trees = []
     shortest_family_tree = None
