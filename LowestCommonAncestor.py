@@ -1,37 +1,41 @@
-def lca(tree, list_of_descendants):
-    list_of_family_trees = []
-    shortest_family_tree = None
-    for descendant in list_of_descendants:  # descendant is a string id for that node
-        family_tree = find_heritage(tree, descendant)
-        # find the shortest family_tree
-        if (shortest_family_tree is None) or (len(family_tree) < len(shortest_family_tree)):
-            shortest_family_tree = family_tree
-        list_of_family_trees.append(family_tree)
-
-    # begin the search for lca at the base of the shortest family_tree
-
-    for lca in shortest_family_tree:
-        contains_lca = False
-
-        # check if the current possible lca is in all other family trees
-        for family_tree in list_of_family_trees:
-            contains_lca = False
-            for ancestor in family_tree:
-                if ancestor is lca:
-                    contains_lca = True
-                    break
-            # if it gets here and the lca hasnt been founf then this lca isnt in this tree
-
-            if contains_lca is False:
-                break
-
-        if contains_lca is True:  # if all trees contain this same lca then we are done
-            return lca
+def find_node_ancestors(graph, node, depth=None):
+    if depth is None:
+        depth = 1
+    ancestors = []
+    for successor in list(graph.successors(node)):
+        ancestors.append((successor, depth))
+    depth += 1
+    for successor in list(graph.successors(node)):
+        ancestors += find_node_ancestors(graph, successor, depth)
+    return ancestors
 
 
-def find_heritage(tree, descendant):  # finds the chain from a given descendant to root
-    chain = [descendant]  # adds this descendants id to the chain
-    while tree.parent(descendant) is not None:
-        descendant = tree.parent(descendant).identifier
-        chain.append(descendant)
-    return chain
+def lowest_common_ancestor(graph, list_of_nodes):
+    other_ancestors = []
+    shortest_list = []
+    for node in list_of_nodes:
+        ancestors = find_node_ancestors(graph, node)
+        ancestors.sort(key=lambda tup: tup[1], reverse=True)  # sort the list in order of decreasing depth
+
+        if (len(shortest_list) is 0) or (len(ancestors) < len(shortest_list)):
+            shortest_list = ancestors
+        else:
+            other_ancestors.append(ancestors)
+
+    for node in shortest_list:
+        for ancestors in other_ancestors:
+            if does_list_contain_node(ancestors, node[0]) is False:
+                break  # lca not found check next node
+        return node[0]  # lca found
+    return None  # lca does not exist
+
+
+def does_list_contain_node(list_of_nodes, key):
+    contains_node = False
+
+    for node in list_of_nodes:
+        if node[0] is key:
+            contains_node = True
+            break
+
+    return contains_node
