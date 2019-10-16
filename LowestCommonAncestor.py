@@ -1,7 +1,8 @@
 def find_node_ancestors(graph, node, depth=None):
+    ancestors = []
     if depth is None:
         depth = 1
-    ancestors = []
+        ancestors.append((node, 0))
     for successor in list(graph.successors(node)):
         ancestors.append((successor, depth))
     depth += 1
@@ -11,22 +12,23 @@ def find_node_ancestors(graph, node, depth=None):
 
 
 def lowest_common_ancestor(graph, list_of_nodes):
-    other_ancestors = []
+    all_ancestors = []
     shortest_list = []
     for node in list_of_nodes:
         ancestors = find_node_ancestors(graph, node)
-        ancestors.sort(key=lambda tup: tup[1], reverse=True)  # sort the list in order of decreasing depth
-
+        ancestors.sort(key=lambda tup: tup[1])  # sort the list in order of decreasing depth
+        all_ancestors.append(ancestors)
         if (len(shortest_list) is 0) or (len(ancestors) < len(shortest_list)):
             shortest_list = ancestors
-        else:
-            other_ancestors.append(ancestors)
 
     for node in shortest_list:
-        for ancestors in other_ancestors:
+        found_lca = True
+        for ancestors in all_ancestors:
             if does_list_contain_node(ancestors, node[0]) is False:
+                found_lca = False
                 break  # lca not found check next node
-        return node[0]  # lca found
+        if found_lca is True:
+            return node[0]  # lca found
     return None  # lca does not exist
 
 
