@@ -1,2 +1,4 @@
 # CS3012-software-engineering-devTask1
-A place to store all my projects for my CS3012 software engineering module
+This repository contains my inital implementation of the LCA algorithim.
+
+It works with an arbitary number of nodes, not just 2.
