@@ -1,4 +1,4 @@
-# CS3012-software-engineering-devTask1
-This repository contains my inital implementation of the LCA algorithim.
+# CS3012-software-engineering-2nd-essay
+This repository contains the second essay for software engineering.
 
-It works with an arbitary number of nodes, not just 2.
+The essay is about the ways in which the software engineering process can be measured and assesed in terms of measurable data, an overview of the computationial platforms available to perform this work, the algorithmic approachs available, and the ethics concerns surrounding this kind of analytics.
